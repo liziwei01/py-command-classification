@@ -34,7 +34,7 @@ import os
 
 ### configuration
 epoch = 15000
-batchSize = 1
+batchSize = 10
 padding = "VALID"
 checkpointDir = "../data/checkpoint"
 ###
