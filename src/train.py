@@ -143,7 +143,7 @@ def train():
 
 				if counter % 1000 == 0:
 					print("Epoch: [%2d], step: [%2d], time: [%4.4f], loss: [%.8f]" % ((ep+1), counter, time.time()-start_time, err))
-					saver.save(sess, os.path.join(checkpointDir, "SRCNN"), global_step=counter, write_meta_graph=False)
+					saver.save(sess, os.path.join(checkpointDir, "cmd"), global_step=counter, write_meta_graph=False)
 
 if __name__ == "__main__":
 	train()
