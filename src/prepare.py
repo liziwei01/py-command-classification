@@ -15,7 +15,7 @@ import split_for_prepare
 TrainingDataDir = "data/train/"
 TestingDataDir = "data/test/"
 isCommandInjectionFile = "is_command_injection.txt"
-notCommandInjectionFile = ""
+notCommandInjectionFile = "not_command_injection.txt"
 H5Dir = "data/h5"
 PreparedTrainingH5Name = "train"
 PreparedTestingH5Name = "test"
@@ -60,7 +60,7 @@ def prepareTrainingData():
 			lines = f.readlines()
 			for line in lines:
 				subInput = command2Matrix(line)
-				subLabel = [[[1]]]
+				subLabel = [[[1]]] if isCommandInjectionFile in filePath else [[[0]]]
 				subInputSequence.append(subInput)
 				subLabelSequence.append(subLabel)
 	saveAsPreparedH5(subInputSequence, subLabelSequence, PreparedTrainingH5Name)
