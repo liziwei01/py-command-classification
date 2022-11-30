@@ -104,5 +104,6 @@ def Prepare():
 
 
 if __name__ == "__main__":
+	split_for_prepare.pre_prepare()
 	Prepare()
 

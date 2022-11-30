@@ -8,7 +8,7 @@ characters of a "non-CI" and using that instead.
 """
 import random
 
-RAW_DATA_FILE = "../data/training_and_test.txt"
+RAW_DATA_FILE = "data/training_and_test.txt"
 
 random.seed(62)  # Constant seed for consistent data generation
 
@@ -30,17 +30,17 @@ def pre_prepare():
             test_data.append(lines[i])
         else:
             training_data.append(lines[i])
-    with open("../data/train/is_command_injection.txt", "w") as f:
+    with open("data/train/is_command_injection.txt", "w") as f:
         f.write("".join(training_data))
-    with open("../data/test/is_command_injection.txt", "w") as f:
+    with open("data/test/is_command_injection.txt", "w") as f:
         f.write("".join(test_data))
 
 
     training_real = [gen_legit_line() for _ in range(8000)]
     test_real = [gen_legit_line() for _ in range(1500)]
-    with open("../data/train/not_command_injection.txt", "w") as f:
+    with open("data/train/not_command_injection.txt", "w") as f:
         f.write("\n".join(training_real))
-    with open("../data/test/not_command_injection.txt", "w") as f:
+    with open("data/test/not_command_injection.txt", "w") as f:
         f.write("\n".join(test_real))
 
 def gen_legit_line(max_length = 100) -> str:
