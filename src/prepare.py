@@ -20,6 +20,8 @@ H5Dir = "data/h5"
 PreparedTrainingH5Name = "train"
 PreparedTestingH5Name = "test"
 
+SPECIAL_CHARS = []  # Used in line2words to split words
+
 ### configuration
 inputSize = 13
 ###
@@ -78,18 +80,14 @@ def command2Matrix(command):
 	
 	return [words[:inputSize]]
 
-# divide command into words by
-# ' ', ';', '&lt;', '|', '||' '&', '&&', '\n' etc
+# divide command into words by bash characters and ASCII control codes
 def line2words(command):
 	line = []
 	lines = []
 	for i in range(len(command)):
 		if i == len(command)-1:
 			lines.append(line)
-		if command[i] == " ":
-			lines.append(line)
-			line = []
-		elif command[i] == ";":
+		if command[i] in SPECIAL_CHARS:
 			lines.append(line)
 			line = []
 		else:
@@ -102,6 +100,11 @@ def Prepare():
 	prepareTrainingData()
 	# prepareTestingData()
 
+
+def initSpecialChars():
+	for i in range(32):
+		SPECIAL_CHARS.append(chr(i))  # Add control characters
+	SPECIAL_CHARS += [char for char in "~`#$&*()\\|[]}{;'\"<>/!?"]  # Add bash special characters
 
 if __name__ == "__main__":
 	split_for_prepare.pre_prepare()
