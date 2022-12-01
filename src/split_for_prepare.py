@@ -27,9 +27,9 @@ def pre_prepare():
     training_data = []
     for i in range(len(lines)):
         if i % 5 == 0:
-            test_data.append(lines[i])
+            test_data.append(noiseify_line(lines[i]))
         else:
-            training_data.append(lines[i])
+            training_data.append(noiseify_line(lines[i]))
     with open("data/train/is_command_injection.txt", "w") as f:
         f.write("".join(training_data))
     with open("data/test/is_command_injection.txt", "w") as f:
