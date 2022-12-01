@@ -70,7 +70,7 @@ def noiseify_line(line: str) -> str:
         if noise_left:
             line = gen_random_chars(random.randint(1, 15)) + line
         if noise_right:
-            line = line + gen_random_chars(random.randint(1, 15))
+            line = line.rstrip() + gen_random_chars(random.randint(1, 15)) + "\n"
     return line
 
 def gen_random_chars(num_chars: int) -> str:
