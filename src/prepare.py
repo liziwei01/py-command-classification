@@ -2,7 +2,7 @@
 Author: liziwei01
 Date: 2022-11-08 10:07:51
 LastEditors: liziwei01
-LastEditTime: 2022-12-01 21:08:59
+LastEditTime: 2022-12-02 01:00:53
 Description: file content
 '''
 import glob
@@ -10,8 +10,6 @@ import os
 
 import h5py
 import numpy as np
-
-import split_for_prepare
 
 TrainingDataDir = "data/train/"
 TestingDataDir = "data/test/"
@@ -27,54 +25,121 @@ SPECIAL_CHARS = []  # Used in line2words to split words
 inputSize = 13
 ###
 
-def GetFullPath(fileName):
-        return os.path.join(os.getcwd(), fileName)
+'''
+description: get special chars for spliting words
+return {*}
+'''
+def initSpecialChars():
+	global SPECIAL_CHARS
+	for i in range(32):
+		SPECIAL_CHARS.append(chr(i))  # Add control characters
+	SPECIAL_CHARS += [char for char in "~`#$&*()\\|[]}{;'\"<>/!?\n\nt"]  # Add bash special characters
 
+'''
+description: `pwd`
+param {str} fileName
+return {str}
+'''
+def GetFullPath(fileName):
+	return os.path.join(os.getcwd(), fileName)
+
+'''
+description: `find $dataset -name "*.txt"` 
+param {str} dataset
+return {list}
+'''
 def GetFilePaths(dataset=TrainingDataDir):
 	dataset = GetFullPath(dataset)
 	data = glob.glob(os.path.join(dataset, "*.txt"))
 	return data
 
-def saveAsPreparedH5(subInputSequence, subLabelSequence, fileName="train"):
-	arrData = np.asarray(subInputSequence)
-	arrLabel = np.asarray(subLabelSequence)
-	savePath = os.path.join(H5Dir, fileName.lower()+".h5")
-	with h5py.File(savePath, 'w') as hf:
-		hf.create_dataset('data', data=arrData)
-		hf.create_dataset('label', data=arrLabel)
+'''
+description: save as h5 for faster reading
+param {list} sub_input_sequence
+param {list} sub_label_sequence
+param {str} file_name
+return {*}
+'''
+def saveAsPreparedH5(sub_input_sequence, sub_label_sequence, file_name="train"):
+	arr_data = np.asarray(sub_input_sequence)
+	arr_label = np.asarray(sub_label_sequence)
+	saved_path = os.path.join(H5Dir, file_name.lower()+".h5")
+	with h5py.File(saved_path, 'w') as hf:
+		hf.create_dataset('data', data=arr_data)
+		hf.create_dataset('label', data=arr_label)
 
-def GetH5File(fileName="train"):
-	dataDir = os.path.join(H5Dir, fileName.lower()+".h5")
-	with h5py.File(dataDir, "r") as hf:
-		trainData = np.array(hf.get("data"))
-		trainLabel = np.array(hf.get("label"))
-		return trainData, trainLabel
+'''
+description: get inputs and labels
+param {str} file_name
+return {tuple[list, list]}
+'''
+def GetH5File(file_name="train"):
+	data_dir = os.path.join(H5Dir, file_name.lower()+".h5")
+	with h5py.File(data_dir, "r") as hf:
+		inputs = np.array(hf.get("data"))
+		labels = np.array(hf.get("label"))
+		return inputs, labels
 
-# now input is [13, 13]
+'''
+description: convert training txt file to h5
+return {*}
+'''
 def prepareTrainingData():
 	# lines of commands
-	subInputSequence = []
+	sub_input_sequence = []
 	# label is 1 if this line of input is command injection, 0 otherwise
-	subLabelSequence = []
-	filePaths = GetFilePaths(TrainingDataDir)
+	sub_label_sequence = []
+	file_paths = GetFilePaths(TrainingDataDir)
 
-	for filePath in filePaths:
-		with open(filePath, "r") as f:
+	for file_path in file_paths:
+		with open(file_path, "r") as f:
 			lines = f.readlines()
 			for line in lines:
-				subInput = getInput(line)
-				subLabel = np.array([0]).reshape([1, 1, 1])
-				if filePath == isCommandInjectionFile:
-					subLabel = np.array([1]).reshape([1, 1, 1])
-				subInputSequence.append(subInput)
-				subLabelSequence.append(subLabel)
-	saveAsPreparedH5(subInputSequence, subLabelSequence, PreparedTrainingH5Name)
+				sub_input = getInput(line)
+				sub_label = np.array([0]).reshape([1, 1, 1])
+				if isCommandInjectionFile in file_path:
+					sub_label = np.array([1]).reshape([1, 1, 1])
+				sub_input_sequence.append(sub_input)
+				sub_label_sequence.append(sub_label)
+	saveAsPreparedH5(sub_input_sequence, sub_label_sequence, PreparedTrainingH5Name)
 
+'''
+description: convert testing txt file to h5
+return {*}
+'''
+def prepareTestingData():
+	sub_input_sequence = []
+	sub_label_sequence = []
+	file_paths = GetFilePaths(TestingDataDir)
+
+	for file_path in file_paths:
+		with open(file_path, "r") as f:
+			lines = f.readlines()
+			for line in lines:
+				sub_input = getInput(line)
+				sub_label = np.array([0]).reshape([1, 1, 1])
+				if isCommandInjectionFile in file_path:
+					sub_label = np.array([1]).reshape([1, 1, 1])
+				sub_input_sequence.append(sub_input)
+				sub_label_sequence.append(sub_label)
+	saveAsPreparedH5(sub_input_sequence, sub_label_sequence, PreparedTestingH5Name)
+
+
+'''
+description: normalize the input matrix
+param {str} line
+return {*}
+'''
 def getInput(line):
 	res = command2Matrix(line).reshape([inputSize, inputSize, 1])
 	ret = np.around(res / 128., decimals=4)
 	return ret
 
+'''
+description: 
+param {str} command
+return {list}
+'''
 def command2Matrix(command):
 	res = np.arange(0, 13).reshape([1, 13])
 	# divide line to words
@@ -94,7 +159,11 @@ def command2Matrix(command):
 	ret = res[1:inputSize+1]
 	return ret
 
-# divide command into words by bash characters and ASCII control codes
+'''
+description: divide command into words by bash characters and ASCII control codes
+param {str} command
+return {list}
+'''
 def line2words(command):
 	line = []
 	lines = []
@@ -113,14 +182,8 @@ def line2words(command):
 
 def Prepare():
 	prepareTrainingData()
-	# prepareTestingData()
+	prepareTestingData()
 
-
-def initSpecialChars():
-	global SPECIAL_CHARS
-	for i in range(32):
-		SPECIAL_CHARS.append(chr(i))  # Add control characters
-	SPECIAL_CHARS += [char for char in "~`#$&*()\\|[]}{;'\"<>/!?\n\nt"]  # Add bash special characters
 
 if __name__ == "__main__":
 	initSpecialChars()
