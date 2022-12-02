@@ -2,7 +2,7 @@
 Author: liziwei01
 Date: 2022-11-08 12:31:40
 LastEditors: liziwei01
-LastEditTime: 2022-12-01 21:27:48
+LastEditTime: 2022-12-01 21:39:17
 Description: file content
 '''
 import os
@@ -36,7 +36,7 @@ import prepare
 
 ### configurations
 epoch = 15000
-saveInterval = 5000
+saveInterval = 50000
 batchSize = 10
 padding = "VALID"
 checkpointDir = "data/checkpoint/"
