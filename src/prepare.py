@@ -2,7 +2,7 @@
 Author: liziwei01
 Date: 2022-11-08 10:07:51
 LastEditors: liziwei01
-LastEditTime: 2022-12-01 20:35:10
+LastEditTime: 2022-12-01 21:08:59
 Description: file content
 '''
 import glob
@@ -62,13 +62,18 @@ def prepareTrainingData():
 		with open(filePath, "r") as f:
 			lines = f.readlines()
 			for line in lines:
-				subInput = command2Matrix(line).reshape([inputSize, inputSize, 1])
+				subInput = getInput(line)
 				subLabel = np.array([0]).reshape([1, 1, 1])
 				if filePath == isCommandInjectionFile:
 					subLabel = np.array([1]).reshape([1, 1, 1])
 				subInputSequence.append(subInput)
 				subLabelSequence.append(subLabel)
 	saveAsPreparedH5(subInputSequence, subLabelSequence, PreparedTrainingH5Name)
+
+def getInput(line):
+	res = command2Matrix(line).reshape([inputSize, inputSize, 1])
+	ret = np.around(res / 128., decimals=4)
+	return ret
 
 def command2Matrix(command):
 	res = np.arange(0, 13).reshape([1, 13])

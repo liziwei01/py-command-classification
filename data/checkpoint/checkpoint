@@ -1,2 +1,2 @@
-model_checkpoint_path: "cmd-50000"
-all_model_checkpoint_paths: "cmd-50000"
+model_checkpoint_path: "cmd-5000"
+all_model_checkpoint_paths: "cmd-5000"
