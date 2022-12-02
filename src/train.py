@@ -2,13 +2,15 @@
 Author: liziwei01
 Date: 2022-11-08 12:31:40
 LastEditors: liziwei01
-LastEditTime: 2022-11-27 07:52:28
+LastEditTime: 2022-12-01 20:47:12
 Description: file content
 '''
-import prepare
-import tensorflow as tf
-import time
 import os
+import time
+
+import tensorflow as tf
+
+import prepare
 
 # three layer conv
 
@@ -34,10 +36,10 @@ import os
 
 ### configuration
 epoch = 15000
-printInterval = 10
+saveInterval = 50000
 batchSize = 10
 padding = "VALID"
-checkpointDir = "../data/checkpoint"
+checkpointDir = "data/checkpoint/"
 ###
 
 ReLU = "ReLU"
@@ -143,7 +145,7 @@ def train():
 				counter +=1
 				_, err = sess.run([train_op, loss], feed_dict={Inputs: batch_data, Labels: batch_labels})
 
-				if counter % printInterval == 0:
+				if counter % saveInterval == 0:
 					print("Epoch: [%2d], step: [%2d], time: [%4.4f], loss: [%.8f]" % ((ep+1), counter, time.time()-start_time, err))
 					saver.save(sess, os.path.join(checkpointDir, "cmd"), global_step=counter, write_meta_graph=False)
 

@@ -2,11 +2,12 @@
 Author: liziwei01
 Date: 2022-11-08 10:07:51
 LastEditors: liziwei01
-LastEditTime: 2022-11-27 07:51:03
+LastEditTime: 2022-12-01 20:35:10
 Description: file content
 '''
-import os
 import glob
+import os
+
 import h5py
 import numpy as np
 
@@ -16,7 +17,7 @@ TrainingDataDir = "data/train/"
 TestingDataDir = "data/test/"
 isCommandInjectionFile = "is_command_injection.txt"
 notCommandInjectionFile = "not_command_injection.txt"
-H5Dir = "data/h5"
+H5Dir = "data/h5/"
 PreparedTrainingH5Name = "train"
 PreparedTestingH5Name = "test"
 
@@ -61,24 +62,32 @@ def prepareTrainingData():
 		with open(filePath, "r") as f:
 			lines = f.readlines()
 			for line in lines:
-				subInput = command2Matrix(line)
-				subLabel = [[[1]]] if isCommandInjectionFile in filePath else [[[0]]]
+				subInput = command2Matrix(line).reshape([inputSize, inputSize, 1])
+				subLabel = np.array([0]).reshape([1, 1, 1])
+				if filePath == isCommandInjectionFile:
+					subLabel = np.array([1]).reshape([1, 1, 1])
 				subInputSequence.append(subInput)
 				subLabelSequence.append(subLabel)
 	saveAsPreparedH5(subInputSequence, subLabelSequence, PreparedTrainingH5Name)
 
 def command2Matrix(command):
+	res = np.arange(0, 13).reshape([1, 13])
 	# divide line to words
 	words = line2words(command)
 	# add placeholder
 	for i in range(inputSize):
 		words.append([0])
-	for i in range(inputSize):
+	for i in range(len(words)):
 		for j in range(inputSize):
 			words[i].append(0)
 		words[i] = words[i][:inputSize]
+
+	for i in range(inputSize+1):
+		inArr = np.array(words[i]).reshape([1, inputSize])
+		res = np.append(res, inArr, axis=0)
 	
-	return [words[:inputSize]]
+	ret = res[1:inputSize+1]
+	return ret
 
 # divide command into words by bash characters and ASCII control codes
 def line2words(command):
@@ -88,8 +97,9 @@ def line2words(command):
 		if i == len(command)-1:
 			lines.append(line)
 		if command[i] in SPECIAL_CHARS:
-			lines.append(line)
-			line = []
+			if len(line) != 0:
+				lines.append(line)
+				line = []
 		else:
 			char = ord(command[i])
 			line.append(char)
@@ -102,11 +112,12 @@ def Prepare():
 
 
 def initSpecialChars():
+	global SPECIAL_CHARS
 	for i in range(32):
 		SPECIAL_CHARS.append(chr(i))  # Add control characters
-	SPECIAL_CHARS += [char for char in "~`#$&*()\\|[]}{;'\"<>/!?"]  # Add bash special characters
+	SPECIAL_CHARS += [char for char in "~`#$&*()\\|[]}{;'\"<>/!?\n\nt"]  # Add bash special characters
 
 if __name__ == "__main__":
-	split_for_prepare.pre_prepare()
+	initSpecialChars()
 	Prepare()
 
