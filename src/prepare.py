@@ -2,7 +2,7 @@
 Author: liziwei01
 Date: 2022-11-08 10:07:51
 LastEditors: liziwei01
-LastEditTime: 2022-12-02 01:00:53
+LastEditTime: 2022-12-02 10:52:55
 Description: file content
 '''
 import glob
@@ -181,7 +181,7 @@ def line2words(command):
 
 
 def Prepare():
-	prepareTrainingData()
+	# prepareTrainingData()
 	prepareTestingData()
 
 

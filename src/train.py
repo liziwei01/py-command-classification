@@ -2,7 +2,7 @@
 Author: liziwei01
 Date: 2022-11-08 12:31:40
 LastEditors: liziwei01
-LastEditTime: 2022-12-02 01:06:32
+LastEditTime: 2022-12-02 11:06:06
 Description: file content
 '''
 import os
@@ -40,7 +40,7 @@ import prepare
 ### configurations
 epoch = 15000
 saveInterval = 50000
-batchSize = 10
+batchSize = 128
 Padding = "VALID"
 CheckpointDir = "data/checkpoint/"
 
@@ -145,7 +145,7 @@ def train():
 
 	counter = 0
 	start_time = time.time()
-	saver=tf.compat.v1.train.Saver(max_to_keep=5)
+	saver = tf.compat.v1.train.Saver(max_to_keep=5)
 
 	with tf.compat.v1.Session() as sess:
 		print("Training...")
