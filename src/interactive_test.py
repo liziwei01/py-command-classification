@@ -12,7 +12,7 @@ import base_test
 if __name__ == "__main__":
     while True:
         inp = input("Enter string: ")
-        is_ci = base.predict_is_ci_str(inp)
+        is_ci = base_test.predict_is_ci_str(inp)
         out = "Prediction: '{}' Is {}Command Injection!".format(inp, "" if is_ci else "Not ")
         print(out)
     

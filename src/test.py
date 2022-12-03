@@ -17,7 +17,7 @@ def test():
 
 	for i in range(len(testing_data)):
 		print("Testing {} of {}".format(i + 1, len(testing_data)), end="\r")
-		predicted = base.predict_is_ci(testing_data[i])
+		predicted = base_test.predict_is_ci(testing_data[i])
 		if predicted == (testing_labels[i][0] == 1):
 			correct += 1
 		else:
