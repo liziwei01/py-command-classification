@@ -17,6 +17,7 @@ testing_data = []
 testing_labels = []
 testing_data_strings = []
 
+# Load training and testing data
 for fil in os.listdir("data/train"):
 	fil = os.path.join("data/train", fil)
 	with open(fil, "r") as f:
@@ -49,7 +50,10 @@ testing_data = np.array(testing_data)
 training_labels = np.array(training_labels)
 testing_labels = np.array(testing_labels)
 
-if __name__ == "__main__":
+def train():
+	# The thought process here is to first expand to a massive amount of nodes to get as much data as possible, then
+	# shrink down until we only have one node. From there, binary_crossentropy as a loss function will
+	# help us to collapse to 0 or 1, which denote not command injection and command injection respectively.
 	model = models.Sequential()
 	model.add(layers.Dense(512, activation="relu", input_shape=(100,)))
 	model.add(layers.Dense(128, activation="relu"))
@@ -63,3 +67,7 @@ if __name__ == "__main__":
 	model.fit(training_data, training_labels, epochs=200, batch_size=64, validation_data=(testing_data, testing_labels))
 
 	model.save(config.MODEL_FILE_NAME)
+
+# Run training if from __main__
+if __name__ == "__main__":
+	train()

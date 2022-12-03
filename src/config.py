@@ -1,1 +1,1 @@
-MODEL_FILE_NAME = "model.h5"
+MODEL_FILE_NAME = "model.h5"  # Holds path from the root of the project to the model location

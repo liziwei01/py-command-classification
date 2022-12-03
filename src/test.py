@@ -1,3 +1,4 @@
+"""Tests model on testing data."""
 import train
 import numpy as np
 import prediction

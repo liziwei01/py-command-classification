@@ -1,6 +1,5 @@
-from keras.models import load_model
-import train
-import numpy as np
+"""Simple script that allows direct interaction with the model"""
+
 import prediction
 
 if __name__ == "__main__":
