@@ -1,24 +1,15 @@
-from keras.models import load_model
 import train
 import numpy as np
-
-model = load_model("test.h5")
+import prediction
+import os
 
 correct = 0
 incorrect = 0
 
-def is_correct(predicted, actual):
-    actual = actual[0]
-    predicted = predicted[0][0]
-    if actual == 0:
-        return predicted < 0.5
-    else:
-        return predicted >= 0.5
-
-for i in range(len(train.testing_data)):
-    print("Testing {} of {}".format(i + 1, len(train.testing_data)), end="\r")
-    prediction = model((np.array([train.testing_data[i]])))
-    if is_correct(prediction, train.testing_labels[i]):
+for i in range(len(train.testing_data_strings)):
+    print("Testing {} of {}".format(i + 1, len(train.testing_data_strings)), end="\r")
+    predicted = prediction.predict_is_ci(train.testing_data_strings[i])
+    if predicted == (train.testing_labels[i][0] == 1):
         correct += 1
     else:
         incorrect += 1

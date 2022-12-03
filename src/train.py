@@ -3,6 +3,7 @@ import keras
 from keras import layers, models
 import numpy as np
 import tensorflow as tf
+import config
 
 # https://github.com/fchollet/deep-learning-with-python-notebooks/issues/157
 # https://www.tensorflow.org/api_docs/python/tf/keras/Model
@@ -14,6 +15,7 @@ training_data = []
 training_labels = []
 testing_data = []
 testing_labels = []
+testing_data_strings = []
 
 for fil in os.listdir("data/train"):
 	fil = os.path.join("data/train", fil)
@@ -39,6 +41,7 @@ for fil in os.listdir("data/test"):
 			line = line.strip()
 			while len(line) < 100:
 				line += " "
+			testing_data_strings.append(line[0:100])
 			testing_data.append(np.array([ord(c) for c in line[0:100]]))
 
 training_data = np.array(training_data)
@@ -59,4 +62,4 @@ if __name__ == "__main__":
 
 	model.fit(training_data, training_labels, epochs=200, batch_size=64, validation_data=(testing_data, testing_labels))
 
-	model.save("model.h5")
+	model.save(config.MODEL_FILE_NAME)
