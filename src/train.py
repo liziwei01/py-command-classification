@@ -2,11 +2,11 @@
 Author: bfishe32
 Date: 2022-12-03 00:46:19
 LastEditors: liziwei01
-LastEditTime: 2022-12-03 11:41:06
+LastEditTime: 2022-12-03 11:58:42
 Description: file content
 '''
 import prepare
-from keras import layers, models, callbacks
+from keras import layers, models
 from config import config
 from os import path
 import time
@@ -23,24 +23,21 @@ def train():
 	# help us to collapse to 0 or 1, which denote not command injection and command injection respectively.
 	training_data, training_labels = prepare.GetH5File(config.TrainH5FileName)
 	testing_data, testing_labels = prepare.GetH5File(config.TestH5FileName)
+	model_file = path.join(config.H5Dir, config.ModelFileName+".h5")	
 	start_time = time.time()
 	print("Training...")
 	for ep in range(config.Epoch):
-		model = models.Sequential()
-		model_file = path.join(config.H5Dir, config.ModelFileName+".h5")
-		callbacks_list = []
-
-		model.add(layers.Dense(512, activation="relu", input_shape=(100,)))
-		model.add(layers.Dense(128, activation="relu"))
-		model.add(layers.Dense(32, activation="relu"))
-		model.add(layers.Dense(1, activation="sigmoid"))
-		model.compile(optimizer="Adam", loss="binary_crossentropy", metrics=["mae", "acc"])
 		if path.exists(model_file):
-			checkpoint = callbacks.ModelCheckpoint(model_file, monitor='loss', verbose=1, save_best_only=True, mode='min')
-			callbacks_list = [checkpoint]
 			print("Continuing...")
-			model.fit(training_data, training_labels, epochs=1000, batch_size=64, validation_data=(testing_data, testing_labels), callbacks=callbacks_list)
+			model = models.load_model(model_file)
+			model.fit(training_data, training_labels, epochs=100, batch_size=64, validation_data=(testing_data, testing_labels))
 		else:
+			model = models.Sequential()
+			model.add(layers.Dense(512, activation="relu", input_shape=(100,)))
+			model.add(layers.Dense(128, activation="relu"))
+			model.add(layers.Dense(32, activation="relu"))
+			model.add(layers.Dense(1, activation="sigmoid"))
+			model.compile(optimizer="Adam", loss="binary_crossentropy", metrics=["mae", "acc"])
 			model.fit(training_data, training_labels, epochs=100, batch_size=64, validation_data=(testing_data, testing_labels))
 		model.save(model_file)
 		print("Epoch: [%2d], time: [%4.4f]" % ((ep+1), time.time()-start_time))

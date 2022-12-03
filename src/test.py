@@ -2,7 +2,7 @@
 Author: liziwei01
 Date: 2022-12-03 00:46:19
 LastEditors: liziwei01
-LastEditTime: 2022-12-03 02:36:08
+LastEditTime: 2022-12-03 11:55:02
 Description: file content
 '''
 """Tests model on testing data."""
@@ -11,7 +11,7 @@ import prepare
 import base_test
 
 def test():
-	testing_data, testing_labels = prepare.GetH5File(config.TrainH5FileName)
+	testing_data, testing_labels = prepare.GetH5File(config.TestH5FileName)
 	correct = 0
 	incorrect = 0
 
