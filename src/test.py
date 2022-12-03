@@ -8,7 +8,7 @@ Description: file content
 """Tests model on testing data."""
 from config import config
 import prepare
-import base
+import base_test
 
 def test():
 	testing_data, testing_labels = prepare.GetH5File(config.TrainH5FileName)
