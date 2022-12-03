@@ -1,1 +1,18 @@
-MODEL_FILE_NAME = "model.h5"  # Holds path from the root of the project to the model location
+'''
+Author: liziwei01
+Date: 2022-12-03 00:46:19
+LastEditors: liziwei01
+LastEditTime: 2022-12-03 01:24:48
+Description: file content
+'''
+
+class Config:
+	ModelFileName = "model"  # Holds path from the root of the project to the model location
+	TrainDir = "data/train"
+	TestDir = "data/train"
+	H5Dir = "data/h5"
+	TrainH5FileName = "train"
+	TestH5FileName = "test"
+	CommandInjectionFileName = "is_command_injection"
+
+config = Config()

@@ -2,7 +2,7 @@
  * @Author: liziwei01
  * @Date: 2022-11-01 19:32:03
  * @LastEditors: liziwei01
- * @LastEditTime: 2022-11-27 07:34:57
+ * @LastEditTime: 2022-12-03 02:35:06
  * @Description: file content
 -->
 # py-command-classification
@@ -16,19 +16,27 @@ This is a class project written by Alec Caswell, Bradley Fisher, Jonathon Negron
 ### Prepare
 
 ```bash
-python ./src/prepare.py
+python ./src/prepare/prepare.py
 ```
 
 ### Train
 
 ```bash
-python ./src/train.py
+python ./src/train/train.py
 ```
 
 ### Test
 
+#### Test Model
+
 ```bash
-python ./src/test.py
+python ./src/test/test.py
+```
+
+#### Interactive Test
+
+```bash
+python ./src/test/interactive.py
 ```
 
 ## License Info
