@@ -2,7 +2,7 @@
 Author: bfishe32
 Date: 2022-12-03 00:46:19
 LastEditors: liziwei01
-LastEditTime: 2022-12-03 11:30:28
+LastEditTime: 2022-12-03 11:37:32
 Description: file content
 '''
 import prepare
@@ -22,7 +22,9 @@ def train():
 	# shrink down until we only have one node. From there, binary_crossentropy as a loss function will
 	# help us to collapse to 0 or 1, which denote not command injection and command injection respectively.
 	training_data, training_labels = prepare.GetH5File(config.TrainH5FileName)
+	testing_data, testing_labels = prepare.GetH5File(config.TestH5FileName)
 	start_time = time.time()
+	print("Training...")
 	for ep in range(config.Epoch):
 		model = models.Sequential()
 		model_file = path.join(config.H5Dir, config.ModelFileName+".h5")
@@ -36,7 +38,10 @@ def train():
 		if path.exists(model_file):
 			checkpoint = callbacks.ModelCheckpoint(model_file, monitor='loss', verbose=1, save_best_only=True, mode='min')
 			callbacks_list = [checkpoint]
-		model.fit(training_data, training_labels, epochs=100, batch_size=64, validation_data=(prepare.testing_data, prepare.testing_labels), callbacks=callbacks_list)
+			print("Continuing...")
+			model.fit(training_data, training_labels, epochs=1000, batch_size=64, validation_data=(testing_data, testing_labels), callbacks=callbacks_list)
+		else:
+			model.fit(training_data, training_labels, epochs=100, batch_size=64, validation_data=(testing_data, testing_labels))
 		model.save(model_file)
 		print("Epoch: [%2d], time: [%4.4f]" % ((ep+1), time.time()-start_time))
 

@@ -2,17 +2,13 @@
 Author: bfishe32
 Date: 2022-12-03 00:47:09
 LastEditors: liziwei01
-LastEditTime: 2022-12-03 02:14:47
+LastEditTime: 2022-12-03 11:36:10
 Description: file content
 '''
 import os
 import numpy as np
 import h5py
 from config import config
-
-testing_data = []
-testing_labels = []
-testing_data_strings = []
 
 '''
 description: save as h5 for faster reading
