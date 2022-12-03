@@ -2,7 +2,7 @@
 Author: liziwei01
 Date: 2022-12-03 00:46:19
 LastEditors: liziwei01
-LastEditTime: 2022-12-03 01:24:48
+LastEditTime: 2022-12-03 11:29:10
 Description: file content
 '''
 
@@ -14,5 +14,6 @@ class Config:
 	TrainH5FileName = "train"
 	TestH5FileName = "test"
 	CommandInjectionFileName = "is_command_injection"
+	Epoch = 15000
 
 config = Config()
