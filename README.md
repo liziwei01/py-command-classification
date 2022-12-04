@@ -16,13 +16,13 @@ This is a class project written by Alec Caswell, Bradley Fisher, Jonathon Negron
 ### Prepare
 
 ```bash
-python ./src/prepare/prepare.py
+python ./src/prepare.py
 ```
 
 ### Train
 
 ```bash
-python ./src/train/train.py
+python ./src/train.py
 ```
 
 ### Test
@@ -30,13 +30,13 @@ python ./src/train/train.py
 #### Test Model
 
 ```bash
-python ./src/test/test.py
+python ./src/test.py
 ```
 
 #### Interactive Test
 
 ```bash
-python ./src/test/interactive.py
+python ./src/interactive.py
 ```
 
 ## License Info
